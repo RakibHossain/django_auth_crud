@@ -42,7 +42,9 @@ class UserView(View):
 
 		# check whether it's valid:
 		if form.is_valid():
-			# user = User.objects.create_user(request.POST)
-			return HttpResponse(request.POST)
+			email = request.POST['email']
+			password = request.POST['password']
+			user = User.objects.create_user(email, password)
+			return HttpResponse('User has been created')
 
-		return HttpResponse('Form is not valid')
+		return HttpResponse('User form is not valid')
