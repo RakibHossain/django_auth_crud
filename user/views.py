@@ -3,6 +3,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views import View
 
+from .forms import NameForm
+from user.models import User
+
 # Create your views here.
 class HomeView(View):
 
@@ -22,3 +25,24 @@ class DashboardView(LoginRequiredMixin, View):
 		template = 'dashboard.html'
 
 		return render(request, template, data)
+
+
+class UserView(View):
+
+	def get(self, request):
+		data = {}
+		data['page_title'] = 'new user'
+		template = 'pages/new_user.html'
+
+		return render(request, template, data)
+
+	def post(self, request):
+		# create a form instance and populate it with data from the request:
+		form = NameForm(request.POST)
+
+		# check whether it's valid:
+		if form.is_valid():
+			# user = User.objects.create_user(request.POST)
+			return HttpResponse(request.POST)
+
+		return HttpResponse('Form is not valid')
