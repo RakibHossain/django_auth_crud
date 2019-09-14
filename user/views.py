@@ -49,6 +49,16 @@ class UserView(View):
 
 			user = User.objects.create_user(email, password, first_name=first_name, last_name=last_name)
 
-			return HttpResponse('User has been created')
+			return redirect('view_user')
 
-		return HttpResponse('User form is not valid')
+		return redirect('new_user')
+
+
+class ViewUser(View):
+
+	def get(self, request):
+		data = {}
+		data['page_title'] = 'users'
+		template = 'pages/user_list.html'
+
+		return render(request, template, data)
