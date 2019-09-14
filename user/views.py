@@ -44,7 +44,11 @@ class UserView(View):
 		if form.is_valid():
 			email = request.POST['email']
 			password = request.POST['password']
-			user = User.objects.create_user(email, password)
+			first_name = request.POST['first_name']
+			last_name = request.POST['last_name']
+
+			user = User.objects.create_user(email, password, first_name=first_name, last_name=last_name)
+
 			return HttpResponse('User has been created')
 
 		return HttpResponse('User form is not valid')
