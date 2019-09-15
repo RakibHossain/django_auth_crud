@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
@@ -36,6 +37,16 @@ class UserManager(BaseUserManager):
 			raise ValueError('Superuser must have is_superuser=True.')
 
 		return self._create_user(email, password, **extra_fields)
+
+	# get all users
+	def all_user(self):
+		return self.filter(is_active=True)
+
+	def get_user(self, id):
+		try:
+			return self.get(id=id, is_active=True)
+		except ObjectDoesNotExist:
+			return False
 
 
 class User(AbstractUser):
