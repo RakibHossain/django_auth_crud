@@ -89,9 +89,11 @@
       var user_id = item.data('id');
       var url = `delete/${user_id}`;
 
-      $.get(url, function(response) {
-        item.closest('.tr').remove();
-      });
+      console.log(url);
+
+      // $.get(url, function(response) {
+      //   item.closest('.tr').remove();
+      // });
     }
 
   </script>

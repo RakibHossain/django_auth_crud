@@ -68,32 +68,28 @@ class ViewUser(View):
 
 class UserEdit(View):
 	
-	def get(self, request, pk):
-		template_name = 'user_edit.html'
-		user = get_object_or_404(User, pk=pk)
-		# pprint(user.__dict__)
+	def get(self, request, id):
 		data = {}
-		data['user'] = user
+		data['page_title'] = 'edit user'
+		data['user'] = User.objects.get_user(id)
+		template = 'pages/edit_user.html'
 
-		return render(request, template_name, data)
+		return render(request, template, data)
 
-class UserUpdate(View):
+	def post(self, request, id):
+		# create a form instance and populate it with data from the request
+		form = NameForm(request.POST)
 
-	def post(self, request, pk):
-		template_name = 'user_new.html'
-		user = get_object_or_404(User, pk=pk)
-		form = UserForm(request.POST or None, instance=user)
-		data = {}
-		data['form'] = form
-		data['user'] = user
+		# check whether it's valid
 		if form.is_valid():
-			form.save()
-			return redirect('user_list')
-		return render(request, template_name, data)
+			user = User.objects.update_user(id, request.POST)
+			return redirect('view_user')
+		return redirect('new_user')
+
 
 class UserDelete(View):
 
-	def get(self, request, pk):
+	def get(self, request, id):
 		user = get_object_or_404(User, pk=pk)
 		user.delete()
 		return redirect('user_list')	

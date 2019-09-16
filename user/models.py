@@ -48,6 +48,18 @@ class UserManager(BaseUserManager):
 		except ObjectDoesNotExist:
 			return False
 
+	def update_user(self, id, data):
+		req_data_fields = ['first_name', 'last_name', 'email', 'password']
+		kwrgs = {}
+		for field in data:
+			if field in req_data_fields:
+				kwrgs[field] = data[field]
+		if kwrgs:
+			# update detail
+			self.filter(id=id).update(**kwrgs)
+			return True
+		return False
+
 
 class User(AbstractUser):
 	"""User model."""
