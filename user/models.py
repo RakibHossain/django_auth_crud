@@ -1,3 +1,4 @@
+import hashlib
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext_lazy as _
@@ -9,6 +10,10 @@ class UserManager(BaseUserManager):
 	"""Define a model manager for User model with no username field."""
 
 	use_in_migrations = True
+
+	def password_encrypt(password):
+		salt = None
+		return hashlib.sha256(salt.encode() + password.encode()).hexdigest()
 
 	def _create_user(self, email, password, **extra_fields):
 		"""Create and save a User with the given email and password."""
@@ -49,16 +54,13 @@ class UserManager(BaseUserManager):
 			return False
 
 	def update_user(self, id, data):
-		req_data_fields = ['first_name', 'last_name', 'email', 'password']
-		kwrgs = {}
-		for field in data:
-			if field in req_data_fields:
-				kwrgs[field] = data[field]
-		if kwrgs:
-			# update detail
-			self.filter(id=id).update(**kwrgs)
-			return True
-		return False
+		user = self.get(id=id)
+		user.first_name = data['first_name'] 
+		user.last_name = data['last_name'] 
+		user.email = self.normalize_email(data['email'])
+		if data['password']:
+			user.set_password(data['password'])
+		user.save()
 
 
 class User(AbstractUser):
