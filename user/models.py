@@ -62,6 +62,13 @@ class UserManager(BaseUserManager):
 			user.set_password(data['password'])
 		user.save()
 
+	def delete_user(self, id):
+		try:
+			user = self.get(id=id)
+			user.delete()
+		except ObjectDoesNotExist:
+			return False
+
 
 class User(AbstractUser):
 	"""User model."""

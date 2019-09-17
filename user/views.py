@@ -90,6 +90,5 @@ class UserEdit(View):
 class UserDelete(View):
 
 	def get(self, request, id):
-		user = get_object_or_404(User, pk=pk)
-		user.delete()
-		return redirect('user_list')	
+		User.objects.delete_user(id)
+		return True

@@ -87,13 +87,14 @@
     function deleteUser(item) 
     {
       var user_id = item.data('id');
-      var url = `delete/${user_id}`;
+      // var url = `delete/${user_id}`;
+      var url = "{% url 'delete_user' %}"+user_id;
 
-      console.log(url);
+      // console.log(url);
 
-      // $.get(url, function(response) {
-      //   item.closest('.tr').remove();
-      // });
+      $.get(url, function(response) {
+        item.closest('tr').remove();
+      });
     }
 
   </script>
