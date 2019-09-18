@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views import View
@@ -42,12 +43,18 @@ class UserView(View):
 
 		# check whether it's valid:
 		if form.is_valid():
-			email = request.POST['email']
-			password = request.POST['password']
-			first_name = request.POST['first_name']
-			last_name = request.POST['last_name']
+			email = request.POST.get('email')
+			password = request.POST.get('password')
+			first_name = request.POST.get('first_name')
+			last_name = request.POST.get('last_name')
 
-			user = User.objects.create_user(email, password, first_name=first_name, last_name=last_name)
+			if request.FILES.get('profile_img'):
+				myfile = request.FILES.get('profile_img')
+				fs = FileSystemStorage()
+				filename = fs.save(myfile.name, myfile)
+				uploaded_file_url = fs.url(filename)
+
+			# user = User.objects.create_user(email, password, first_name=first_name, last_name=last_name)
 
 			return redirect('view_user')
 
