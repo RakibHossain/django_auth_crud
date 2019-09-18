@@ -1,5 +1,5 @@
 import hashlib
-from django.db import models
+from django.db import models, transaction, IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractUser, BaseUserManager
@@ -54,13 +54,21 @@ class UserManager(BaseUserManager):
 			return False
 
 	def update_user(self, id, data):
-		user = self.get(id=id)
-		user.first_name = data['first_name'] 
-		user.last_name = data['last_name'] 
-		user.email = self.normalize_email(data['email'])
-		if data['password']:
-			user.set_password(data['password'])
-		user.save()
+		sid = transaction.savepoint()
+
+		try:
+			user = self.get(id=id)
+			user.first_name = data['first_name'] 
+			user.last_name = data['last_name'] 
+			user.email = self.normalize_email(data['email'])
+			if data['password']:
+				user.set_password(data['password'])
+			user.save()
+
+			transaction.savepoint_commit(sid)
+		except IntegrityError as e:
+			transaction.savepoint_rollback(sid)
+			print(e.message)
 
 	def delete_user(self, id):
 		try:
