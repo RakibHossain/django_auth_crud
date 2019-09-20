@@ -1,11 +1,14 @@
+import datetime
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.conf import settings
 from django.views import View
 
-from .forms import NameForm
-from user.models import User
+from .forms import NameForm, DocumentForm
+from user.models import User, Document
 
 # Create your views here.
 class HomeView(View):
@@ -49,13 +52,16 @@ class UserView(View):
 			last_name = request.POST.get('last_name')
 
 			if request.FILES.get('profile_img'):
-				myfile = request.FILES.get('profile_img')
-				fs = FileSystemStorage()
-				filename = fs.save(myfile.name, myfile)
-				uploaded_file_url = fs.url(filename)
+				file = request.FILES.get('profile_img')
+				file_path = 'users/'+datetime.date.today().isoformat()
+				fs = FileSystemStorage(location='media/'+file_path)
+				filename = fs.save(file.name, file)
+				file_original_path = file_path+'/'+str(filename)
+				uploaded_file_url = fs.url(file_original_path)
+				# print(uploaded_file_url)
 
-			# user = User.objects.create_user(email, password, first_name=first_name, last_name=last_name)
-
+			user = User.objects.create_user(email, password, first_name=first_name, last_name=last_name)
+			document = Document.objects.save(user, uploaded_file_url)
 			return redirect('view_user')
 
 		return redirect('new_user')

@@ -1,4 +1,6 @@
 import hashlib
+
+from django.utils import timezone
 from django.db import models, transaction, IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext_lazy as _
@@ -89,6 +91,11 @@ class UserManager(BaseUserManager):
 			return False
 
 
+class DocumentManager(models.Manager):
+	def save(self, user, document_path):
+		return self.create(user=user, document=document_path)
+
+
 class User(AbstractUser):
 	"""User model."""
 
@@ -112,3 +119,17 @@ class User(AbstractUser):
 	REQUIRED_FIELDS = []
 
 	objects = UserManager()
+
+
+class Document(models.Model):
+	id = models.AutoField(primary_key=True, editable=False)
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	document = models.CharField(max_length=100, null=True, blank=True)
+	# document = models.FileField(upload_to='documents/')
+	created_at = models.DateTimeField(default=timezone.now)
+	updated_at = models.DateTimeField(default=timezone.now)
+
+	objects = DocumentManager()
+
+	def __str__(self):
+		return "Document {id} is found for {user}".format(id=self.id, user=self.user)

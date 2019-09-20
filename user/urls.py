@@ -1,3 +1,5 @@
+from django.conf.urls.static import static
+from django.conf import settings
 from django.urls import path
 from user import views
 
@@ -14,3 +16,5 @@ urlpatterns = [
     path('user/delete/<int:id>', views.UserDelete.as_view(), name='delete_user'),
     path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
