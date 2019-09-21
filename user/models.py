@@ -92,8 +92,22 @@ class UserManager(BaseUserManager):
 
 
 class DocumentManager(models.Manager):
+
+	def get_document(self, user_id):
+		try:
+			return self.get(user_id=user_id)
+		except ObjectDoesNotExist:
+			return False
+
 	def save(self, user, document_path):
 		return self.create(user=user, document=document_path)
+
+	def delete(self, id):
+		try:
+			document = self.get(id=id)
+			document.delete()
+		except ObjectDoesNotExist:
+			return False
 
 
 class User(AbstractUser):
@@ -124,8 +138,8 @@ class User(AbstractUser):
 class Document(models.Model):
 	id = models.AutoField(primary_key=True, editable=False)
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	document = models.CharField(max_length=100, null=True, blank=True)
-	# document = models.FileField(upload_to='documents/')
+	# document = models.CharField(max_length=100, null=True, blank=True)
+	document = models.FileField()
 	created_at = models.DateTimeField(default=timezone.now)
 	updated_at = models.DateTimeField(default=timezone.now)
 

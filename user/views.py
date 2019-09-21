@@ -1,3 +1,5 @@
+import os
+import time
 import datetime
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -9,6 +11,20 @@ from django.views import View
 
 from .forms import NameForm, DocumentForm
 from user.models import User, Document
+
+
+class FileUpload():
+
+	def upload(path, file):
+		file_path = path+'/'+datetime.date.today().isoformat()
+		fs = FileSystemStorage(location='media/'+file_path)
+		tempname = str(time.time_ns())+'.png'
+		filename = fs.save(tempname, file)
+		file_original_path = file_path+'/'+str(filename)
+		uploaded_file_url = fs.url(file_original_path)
+
+		return uploaded_file_url
+
 
 # Create your views here.
 class HomeView(View):
@@ -53,11 +69,7 @@ class UserView(View):
 
 			if request.FILES.get('profile_img'):
 				file = request.FILES.get('profile_img')
-				file_path = 'users/'+datetime.date.today().isoformat()
-				fs = FileSystemStorage(location='media/'+file_path)
-				filename = fs.save(file.name, file)
-				file_original_path = file_path+'/'+str(filename)
-				uploaded_file_url = fs.url(file_original_path)
+				uploaded_file_url = FileUpload.upload('users', file)
 				# print(uploaded_file_url)
 
 			user = User.objects.create_user(email, password, first_name=first_name, last_name=last_name)
@@ -95,8 +107,30 @@ class UserEdit(View):
 
 		# check whether it's valid
 		if form.is_valid():
-			user = User.objects.update_user(id, request.POST)
+			# user = User.objects.update_user(id, request.POST)
+			old_file = Document.objects.get_document(user_id=id).document
+			print(old_file)
+
+			try:
+				# if request.FILES.get('profile_img'):
+				# 	if os.path.isfile(old_file.path):
+				# 		os.remove(old_file.path)
+
+				# 	file = request.FILES.get('profile_img')
+				# 	uploaded_file_url = FileUpload.upload('users', file)
+				# 	print(uploaded_file_url)
+
+				# if os.path.isfile(old_file.path):
+				os.remove(old_file.path)
+
+				file = request.FILES.get('profile_img')
+				uploaded_file_url = FileUpload.upload('users', file)
+				print(uploaded_file_url)
+			except Exception as e:
+				raise e
+
 			return redirect('view_user')
+
 		return redirect('new_user')
 
 
