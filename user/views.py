@@ -85,12 +85,12 @@ class ViewUser(View):
 	def get(self, request):
 		data = {}
 		data['page_title'] = 'users'
-		users = User.objects.all_user()
+		data['users'] = User.objects.all_user()
 		template = 'pages/user_list.html'
 
-		# data['users'] = serializers.serialize('json', users)
+		# response = serializers.serialize('json', data['users'])
 		# # response = serializers.serialize('json', data['users'], fields=('first_name','last_name','email'))
-		# return HttpResponse(data['users'])
+		# return HttpResponse(response)
 
 		return render(request, template, data)
 
