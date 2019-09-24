@@ -2,15 +2,16 @@ import os
 import time
 import datetime
 
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.files.storage import FileSystemStorage
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.conf import settings
 from django.views import View
+from django.conf import settings
+from django.core import serializers
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.core.files.storage import FileSystemStorage
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .forms import NameForm, DocumentForm
 from user.models import User, Document
+from .forms import NameForm, DocumentForm
 
 
 class FileUpload():
@@ -84,10 +85,13 @@ class ViewUser(View):
 	def get(self, request):
 		data = {}
 		data['page_title'] = 'users'
-		data['users'] = User.objects.all_user()
+		users = User.objects.all_user()
 		template = 'pages/user_list.html'
 
+		# data['users'] = serializers.serialize('json', users)
+		# # response = serializers.serialize('json', data['users'], fields=('first_name','last_name','email'))
 		# return HttpResponse(data['users'])
+
 		return render(request, template, data)
 
 
