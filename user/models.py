@@ -79,6 +79,8 @@ class UserManager(BaseUserManager):
 			user.save()
 
 			transaction.savepoint_commit(sid)
+
+			return user
 		except IntegrityError as e:
 			transaction.savepoint_rollback(sid)
 			print(e.message)
@@ -138,8 +140,8 @@ class User(AbstractUser):
 class Document(models.Model):
 	id = models.AutoField(primary_key=True, editable=False)
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	# document = models.CharField(max_length=100, null=True, blank=True)
-	document = models.FileField()
+	document = models.CharField(max_length=100, null=True, blank=True)
+	# document = models.FileField()
 	created_at = models.DateTimeField(default=timezone.now)
 	updated_at = models.DateTimeField(default=timezone.now)
 

@@ -111,25 +111,22 @@ class UserEdit(View):
 
 		# check whether it's valid
 		if form.is_valid():
-			# user = User.objects.update_user(id, request.POST)
-			old_file = Document.objects.get_document(user_id=id).document
-			print(old_file)
+			user = User.objects.update_user(id, request.POST)
+			old_file = Document.objects.get_document(user_id=id)
 
 			try:
-				# if request.FILES.get('profile_img'):
-				# 	if os.path.isfile(old_file.path):
-				# 		os.remove(old_file.path)
+				delete_file = settings.BASE_DIR+old_file.document
 
-				# 	file = request.FILES.get('profile_img')
-				# 	uploaded_file_url = FileUpload.upload('users', file)
-				# 	print(uploaded_file_url)
+				if request.FILES.get('profile_img'):
+					if os.path.isfile(delete_file):
+						os.remove(delete_file)
 
-				# if os.path.isfile(old_file.path):
-				os.remove(old_file.path)
+					file = request.FILES.get('profile_img')
+					uploaded_file_url = FileUpload.upload('users', file)
+					# print(uploaded_file_url)
 
-				file = request.FILES.get('profile_img')
-				uploaded_file_url = FileUpload.upload('users', file)
-				print(uploaded_file_url)
+					Document.objects.delete(id=old_file.id)
+					document = Document.objects.save(user, uploaded_file_url)
 			except Exception as e:
 				raise e
 
@@ -141,5 +138,15 @@ class UserEdit(View):
 class UserDelete(View):
 
 	def get(self, request, id):
-		User.objects.delete_user(id)
-		return True
+
+		try:
+			old_file = Document.objects.get_document(user_id=id)
+			delete_file = settings.BASE_DIR+old_file.document
+			User.objects.delete_user(id)
+
+			if os.path.isfile(delete_file):
+				os.remove(delete_file)
+
+			return True
+		except Exception as e:
+			raise e
