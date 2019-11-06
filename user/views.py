@@ -92,7 +92,8 @@ class ViewUser(View):
 		data['wifi_config'] = WifiConfig(
 								ssid='my-wifi', 
 								authentication=WifiConfig.AUTHENTICATION.WPA, 
-								password='P@$$w0rd'
+								# password='P@$$w0rd',
+								password='r01673120069',
 							)
 		data['qr_code_options'] = QRCodeOptions(size='10', border=6, error_correction='L')
 		template = 'pages/user_list.html'

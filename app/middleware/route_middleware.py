@@ -9,5 +9,5 @@ class RouteAccess(MiddlewareMixin):
 
 		# get current url name
 		current_url = resolve(request.path_info).url_name
-		if current_url != 'view_user':
-			return HttpResponse("Sorry, you are not allowed.")
+		if not current_url == 'view_user':
+			return HttpResponse("Sorry, you are not allowed to access this route.")
