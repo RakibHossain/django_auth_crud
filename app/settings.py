@@ -50,7 +50,7 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = env('EMAIL_USE_TLS')
 
 
-# CORE Django Application
+# Core Django Application
 CORE_INSTALL_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -68,13 +68,14 @@ LIBRARY_INSTALL_APPS = [
     'qr_code',
 ]
 
-# CUSTOM APPLICATION
+# Custom Application
 CUSTOM_INSTALL_APPS = [
     'user',
 ]
 
 # Application definition
 INSTALLED_APPS = CORE_INSTALL_APPS + LIBRARY_INSTALL_APPS + CUSTOM_INSTALL_APPS
+
 
 # CORS CONFIG #
 CORS_ORIGIN_ALLOW_ALL = True
@@ -89,7 +90,9 @@ CORS_ALLOW_METHODS = (
 )
 # CORS CONFIG END #
 
-MIDDLEWARE = [
+
+# Core Django Middleware
+CORE_MIDDLEWARES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -99,7 +102,18 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Custom Middleware
+CUSTOM_MIDDLEWARES = [
+    'app.middleware.ip_middleware.IPAccess',
+    'app.middleware.route_middleware.RouteAccess',
+]
+
+# Middleware Defination
+MIDDLEWARE = CORE_MIDDLEWARES + CUSTOM_MIDDLEWARES
+
+
 ROOT_URLCONF = 'app.urls'
+
 
 TEMPLATES = [
     {
@@ -117,6 +131,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
