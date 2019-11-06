@@ -65,6 +65,7 @@ CORE_INSTALL_APPS = [
 LIBRARY_INSTALL_APPS = [
     'rest_framework',
     'corsheaders',
+    'qr_code',
 ]
 
 # CUSTOM APPLICATION
