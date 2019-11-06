@@ -1,5 +1,6 @@
 {% extends 'layout/app.html' %}
 
+{% load qr_code %}
 {% block content %}
 
 <!-- Content Wrapper. Contains page content -->
@@ -78,6 +79,11 @@
             </div>
           </div>
           <!-- /.card -->
+
+          <div>
+            {% qr_from_text qr_code_message options=qr_code_options %}
+          </div>
+
         </div>
       </div>
     </div>
@@ -105,4 +111,4 @@
 
   </script>
 
-{% endblock %}
+{% endblock js %}
