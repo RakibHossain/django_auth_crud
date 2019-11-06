@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.mixins import LoginRequiredMixin
-from qr_code.qrcode.utils import QRCodeOptions
+from qr_code.qrcode.utils import WifiConfig, QRCodeOptions
 
 from user.models import User, Document
 from .forms import NameForm, DocumentForm
@@ -87,7 +87,13 @@ class ViewUser(View):
 		data = {}
 		data['page_title'] = 'users'
 		data['users'] = User.objects.all_user()
-		data['qr_code_message'] = 'Hello World! I am Rakib.'
+		# data['qr_code_message'] = 'Hello World! I am Rakib.'
+		# Use a WifiConfig instance to encapsulate the configuration of the connexion. 
+		data['wifi_config'] = WifiConfig(
+								ssid='my-wifi', 
+								authentication=WifiConfig.AUTHENTICATION.WPA, 
+								password='P@$$w0rd'
+							)
 		data['qr_code_options'] = QRCodeOptions(size='10', border=6, error_correction='L')
 		template = 'pages/user_list.html'
 
