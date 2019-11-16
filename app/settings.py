@@ -52,6 +52,7 @@ EMAIL_USE_TLS = env('EMAIL_USE_TLS')
 
 # Core Django Application
 CORE_INSTALL_APPS = [
+    'suit',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
