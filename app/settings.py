@@ -62,6 +62,10 @@ CORE_INSTALL_APPS = [
     'django_extensions',
 ]
 
+SUIT_CONFIG = {
+    'ADMIN_NAME': 'Auth CRUD DashBoard',
+}
+
 # Library Application
 LIBRARY_INSTALL_APPS = [
     'rest_framework',
