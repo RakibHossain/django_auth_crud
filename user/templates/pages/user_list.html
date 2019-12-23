@@ -1,6 +1,8 @@
 {% extends 'layout/app.html' %}
 
 {% load qr_code %}
+{% load filters %}
+
 {% block content %}
 
 <!-- Content Wrapper. Contains page content -->
@@ -41,13 +43,14 @@
                     <th>Last Name</th>
                     <th>Email</th>
                     <th>Profile Image</th>
+                    <th>Is Staff</th>
                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {% for user in users %}
                     <tr>
-                      <td>1.</td>
+                      <td>{{ forloop.counter }}</td>
                       <td>{{ user.first_name }}</td>
                       <td>{{ user.last_name }}</td>
                       <td>{{ user.email }}</td>
@@ -56,11 +59,10 @@
                       {% else %}
                         <td></td>
                       {% endif %}
+                      <td>{{ user.id|get_user_type }}</td>
                       <td>
-                        <a href="{% url 'edit_user' user.id %}" class="btn btn-sm btn-success">
-                          <i class="fa fa-edit"></i>
-                        </a>
-                        <button data-id="{{ user.id }}" onclick="deleteUser($(this))" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                        <a href="{% url 'edit_user' user.id %}" class="btn btn-sm btn-success"><i class="fa fa-edit"></i></a>
+                        <button onclick="deleteUser($(this), {{ user.id }})" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
                       </td>
                     </tr>
                   {% endfor %}
@@ -95,11 +97,10 @@
 
 {% block js %}
 
-  <script type="text/javascript">
+  <script>
 
-    function deleteUser(item) 
+    function deleteUser(item, user_id) 
     {
-      var user_id = item.data('id');
       // var url = `delete/${user_id}`;
       var url = "{% url 'delete_user' %}"+user_id;
 

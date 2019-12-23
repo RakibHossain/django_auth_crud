@@ -63,7 +63,7 @@ CORE_INSTALL_APPS = [
 ]
 
 SUIT_CONFIG = {
-    'ADMIN_NAME': 'Auth CRUD DashBoard',
+    'ADMIN_NAME': 'Auth CRUD',
 }
 
 # Library Application
