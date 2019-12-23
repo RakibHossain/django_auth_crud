@@ -116,8 +116,8 @@ class UserEdit(View):
 		if form.is_valid():
 
 			try:
-				user = User.objects.update_user(id, request.POST)
 				old_file = Document.objects.get_document(user_id=id)
+				user = User.objects.update_user(id, request.POST)
 
 				if request.FILES.get('profile_img'):
 
@@ -145,8 +145,8 @@ class UserDelete(View):
 	def get(self, request, id):
 
 		try:
-			User.objects.delete_user(id)
 			old_file = Document.objects.get_document(user_id=id)
+			User.objects.delete_user(id)
 
 			if old_file:
 				delete_file = settings.BASE_DIR+old_file.document
