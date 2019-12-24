@@ -46,6 +46,9 @@ class UserView(View):
 		return render(request, template, data)
 
 	def post(self, request):
+		print(request.POST)
+		return HttpResponse('Debugging...')
+
 		# create a form instance and populate it with data from the request:
 		form = NameForm(request.POST)
 

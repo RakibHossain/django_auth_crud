@@ -149,3 +149,15 @@ class Document(models.Model):
 
 	def __str__(self):
 		return "Document {id} is found for {user}".format(id=self.id, user=self.user)
+
+
+class UserFriend(models.Model):
+	id = models.AutoField(primary_key=True, editable=False)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	name = models.CharField(max_length=100, null=True, blank=True)
+	age = models.IntegerField(null=True)
+	created_at = models.DateTimeField(default=timezone.now)
+	updated_at = models.DateTimeField(default=timezone.now)
+
+	def __str__(self):
+		return "Friends {id} is found for {user}".format(id=self.id, user=self.user)
