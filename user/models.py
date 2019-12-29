@@ -97,17 +97,16 @@ class UserFriendManager(models.Manager):
 
 	def get_user_friend(self, user_id):
 		try:
-			return self.get(user_id=user_id)
+			return self.filter(user_id=user_id)
 		except ObjectDoesNotExist:
 			return False
 
 	def save(self, user, name, age):
 		return self.create(user=user, name=name, age=age)
 
-	def delete(self, id):
+	def delete(self, user_id):
 		try:
-			document = self.get(id=id)
-			document.delete()
+			user_friend = self.filter(user_id=user_id).delete()
 		except ObjectDoesNotExist:
 			return False
 
@@ -125,8 +124,7 @@ class DocumentManager(models.Manager):
 
 	def delete(self, id):
 		try:
-			document = self.get(id=id)
-			document.delete()
+			document = self.get(id=id).delete()
 		except ObjectDoesNotExist:
 			return False
 

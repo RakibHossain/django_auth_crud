@@ -123,10 +123,18 @@ class UserEdit(View):
 		if form.is_valid():
 
 			try:
-				old_file = Document.objects.get_document(user_id=id)
+				names = request.POST.getlist('name[]')
+				ages = request.POST.getlist('age[]')
+
 				user = User.objects.update_user(id, request.POST)
+				# delete user friends
+				UserFriend.objects.delete(user_id=id)
+				for key, value in enumerate(names):
+					user_friend = UserFriend.objects.save(user, names[key], ages[key])
 
 				if request.FILES.get('profile_img'):
+
+					old_file = Document.objects.get_document(user_id=id)
 
 					if old_file:
 						delete_file = settings.BASE_DIR+old_file.document
