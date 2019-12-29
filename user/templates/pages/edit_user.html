@@ -23,61 +23,119 @@
 
   <!-- Main content -->
   <section class="content">
+
     <div class="container-fluid">
-      <div class="row">
-        <!-- left column -->
-        <div class="col-md-6">
-          <!-- general form elements -->
-          <div class="card card-primary">
-            <div class="card-header">
-              <h3 class="card-title">{{ 'edit user' | capfirst }}</h3>
+
+      <!-- general form elements -->
+      <div class="card card-primary">
+
+        <div class="card-header">
+          <h3 class="card-title">{{ 'edit user' | capfirst }}</h3>
+        </div>
+        <!-- /.card-header -->
+
+        <!-- form start -->
+        <form action="{% url 'update_user' user.id %}" method="post" enctype="multipart/form-data">
+
+          {% csrf_token %}
+          <div class="card-body">
+
+            <div class="form-row">
+              
+              <div class="form-group col-md-3">
+                <label for="first_name">First Name</label>
+                <input type="text" class="form-control form-control-sm" name="first_name" value="{{ user.first_name }}">
+              </div>
+            
+              <div class="form-group col-md-3">
+                <label for="last_name">Last Name</label>
+                <input type="text" class="form-control form-control-sm" name="last_name" value="{{ user.last_name }}">
+              </div>
+            
+              <div class="form-group col-md-3">
+                <label for="email">Email address</label>
+                <input type="email" class="form-control form-control-sm" name="email" value="{{ user.email }}">
+              </div>
+            
+              <div class="form-group col-md-3">
+                <label for="password">Password</label>
+                <input type="password" class="form-control form-control-sm" name="password" placeholder="Password">
+              </div>
+              
             </div>
-            <!-- /.card-header -->
-            <!-- form start -->
-            <form action="{% url 'update_user' user.id %}" method="post" enctype="multipart/form-data">
-              {% csrf_token %}
-              <div class="card-body">
-                <div class="form-group">
-                  <label for="exampleInputFirstName">First Name</label>
-                  <input type="text" class="form-control" name="first_name" value="{{ user.first_name }}" placeholder="Enter your first name">
-                </div>
-                <div class="form-group">
-                  <label for="exampleInputLastName">Last Name</label>
-                  <input type="text" class="form-control" name="last_name" value="{{ user.last_name }}" placeholder="Enter your last name">
-                </div>
-                <div class="form-group">
-                  <label for="exampleInputEmail">Email address</label>
-                  <input type="email" class="form-control" name="email" value="{{ user.email }}" placeholder="Enter email">
-                </div>
-                <div class="form-group">
-                  <label for="exampleInputPassword">Password</label>
-                  <input type="password" class="form-control" name="password" placeholder="Password">
-                </div>
-                <div class="form-group">
-                  <label for="inputFile">File input</label>
-                  <div class="input-group">
-                    <div class="custom-file">
-                      <input type="file" class="custom-file-input" name="profile_img">
-                      <label class="custom-file-label" for="inputFile">Choose file</label>
-                    </div>
-                    <div class="input-group-append">
-                      <span class="input-group-text">Upload</span>
-                    </div>
+
+            <div class="form-row">
+              
+              <div class="form-group col-md-6">
+                <label for="inputFile">File input</label>
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" name="profile_img">
+                    <label class="custom-file-label" for="inputFile">Choose file</label>
+                  </div>
+                  <div class="input-group-append">
+                    <span class="input-group-text">Upload</span>
                   </div>
                 </div>
               </div>
-              <!-- /.card-body -->
+              
+            </div>
 
-              <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Submit</button>
+            <div class="user_detail">
+              {% for friend in user.user_friends.all %}
+              <div class="form-row user_detail_info">
+                <div class="form-group col-md-3">
+                  <label class="control-label">Friend Name</label>
+                  <input type="text" class="form-control form-control-sm" name="name[]" required="" value="{{ friend.name }}">
+                </div>
+                <div class="form-group col-md-3">
+                  <label class="control-label">Age</label>
+                  <input type="text" class="form-control form-control-sm" name="age[]" required="" value="{{ friend.age }}">
+                </div>
+                <div class="form-group col-md-3" style="position: relative; top: 30px;">
+                  <i class="fa fa-plus btn btn-sm btn-info" onclick="add($(this));"></i>
+                  <i class="fa fa-minus btn btn-sm btn-danger btn-remove d-none" data-type="delete" onclick="remove($(this));"></i>
+                </div>
               </div>
-            </form>
+              {% endfor %}
+              <div class="extra_user_detail_info"></div>
+            </div>
+
           </div>
-          <!-- /.card -->
-        </div>
+          <!-- /.card-body -->
+
+          <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+
+        </form>
+
       </div>
+      <!-- /.card -->
+
     </div>
+
   </section>
+
 </div>
+
+<script>
+  function add(item) 
+  {
+    var extra_user_detail_info = item.closest('.user_detail_info').clone();
+
+    extra_user_detail_info.find('.btn-remove').removeClass('d-none');
+    extra_user_detail_info.find('input, select').each(function() {
+        $(this).val('');
+    });
+
+    item.closest('.user_detail').find('.extra_user_detail_info').append(extra_user_detail_info);
+  }
+
+  function remove(item) 
+  {
+    item.closest('.user_detail_info').remove();
+  }
+</script>
 
 {% endblock content %}

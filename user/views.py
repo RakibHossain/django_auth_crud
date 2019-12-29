@@ -10,7 +10,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from qr_code.qrcode.utils import WifiConfig, QRCodeOptions
 
-from user.models import User, Document
+from user.models import User, UserFriend, Document
 from .forms import NameForm, DocumentForm
 from applibs.file_upload import FileUpload
 
@@ -46,8 +46,8 @@ class UserView(View):
 		return render(request, template, data)
 
 	def post(self, request):
-		print(request.POST)
-		return HttpResponse('Debugging...')
+		# print(request.POST)
+		# return HttpResponse('Debugging...')
 
 		# create a form instance and populate it with data from the request:
 		form = NameForm(request.POST)
@@ -60,8 +60,12 @@ class UserView(View):
 				password = request.POST.get('password')
 				first_name = request.POST.get('first_name')
 				last_name = request.POST.get('last_name')
+				names = request.POST.getlist('name[]')
+				ages = request.POST.getlist('age[]')
 
 				user = User.objects.create_user(email, password, first_name=first_name, last_name=last_name)
+				for key, value in enumerate(names):
+					user_friend = UserFriend.objects.save(user, names[key], ages[key])
 
 				if request.FILES.get('profile_img'):
 					file = request.FILES.get('profile_img')

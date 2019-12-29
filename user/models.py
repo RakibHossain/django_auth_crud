@@ -93,6 +93,25 @@ class UserManager(BaseUserManager):
 			return False
 
 
+class UserFriendManager(models.Manager):
+
+	def get_user_friend(self, user_id):
+		try:
+			return self.get(user_id=user_id)
+		except ObjectDoesNotExist:
+			return False
+
+	def save(self, user, name, age):
+		return self.create(user=user, name=name, age=age)
+
+	def delete(self, id):
+		try:
+			document = self.get(id=id)
+			document.delete()
+		except ObjectDoesNotExist:
+			return False
+
+
 class DocumentManager(models.Manager):
 
 	def get_document(self, user_id):
@@ -153,11 +172,13 @@ class Document(models.Model):
 
 class UserFriend(models.Model):
 	id = models.AutoField(primary_key=True, editable=False)
-	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_friends')
 	name = models.CharField(max_length=100, null=True, blank=True)
 	age = models.IntegerField(null=True)
 	created_at = models.DateTimeField(default=timezone.now)
 	updated_at = models.DateTimeField(default=timezone.now)
+
+	objects = UserFriendManager()
 
 	def __str__(self):
 		return "Friends {id} is found for {user}".format(id=self.id, user=self.user)
