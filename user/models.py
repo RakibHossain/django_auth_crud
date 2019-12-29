@@ -156,7 +156,7 @@ class User(AbstractUser):
 
 class Document(models.Model):
 	id = models.AutoField(primary_key=True, editable=False)
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile_image')
 	document = models.CharField(max_length=100, null=True, blank=True)
 	# document = models.FileField()
 	created_at = models.DateTimeField(default=timezone.now)
