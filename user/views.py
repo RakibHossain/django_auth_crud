@@ -126,14 +126,16 @@ class UserEdit(View):
 		if form.is_valid():
 
 			try:
-				names = request.POST.getlist('name[]')
-				ages = request.POST.getlist('age[]')
-
 				user = User.objects.update_user(id, request.POST)
-				# delete user friends
-				UserFriend.objects.delete(user_id=id)
-				for key, value in enumerate(names):
-					user_friend = UserFriend.objects.save(user, names[key], ages[key])
+
+				if request.POST.getlist('name[]'):
+					names = request.POST.getlist('name[]')
+					ages = request.POST.getlist('age[]')
+					
+					# delete user friends
+					UserFriend.objects.delete(user_id=id)
+					for key, value in enumerate(names):
+						user_friend = UserFriend.objects.save(user, names[key], ages[key])
 
 				if request.FILES.get('profile_img'):
 
