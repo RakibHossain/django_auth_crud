@@ -10,7 +10,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from qr_code.qrcode.utils import WifiConfig, QRCodeOptions
 
-from user.models import User, Document
+from user.models import User, UserFriend, Document
 from .forms import NameForm, DocumentForm
 from applibs.file_upload import FileUpload
 
@@ -58,8 +58,12 @@ class UserView(View):
 				password = request.POST.get('password')
 				first_name = request.POST.get('first_name')
 				last_name = request.POST.get('last_name')
+				names = request.POST.getlist('name[]')
+				ages = request.POST.getlist('age[]')
 
 				user = User.objects.create_user(email, password, first_name=first_name, last_name=last_name)
+				for key, value in enumerate(names):
+					user_friend = UserFriend.objects.save(user, names[key], ages[key])
 
 				if request.FILES.get('profile_img'):
 					file = request.FILES.get('profile_img')
@@ -110,6 +114,9 @@ class UserEdit(View):
 		return render(request, template, data)
 
 	def post(self, request, id):
+		# print(request.POST)
+		# return HttpResponse('Debugging...')
+		
 		# create a form instance and populate it with data from the request
 		form = NameForm(request.POST)
 
@@ -117,10 +124,20 @@ class UserEdit(View):
 		if form.is_valid():
 
 			try:
-				old_file = Document.objects.get_document(user_id=id)
 				user = User.objects.update_user(id, request.POST)
 
+				if request.POST.getlist('name[]'):
+					names = request.POST.getlist('name[]')
+					ages = request.POST.getlist('age[]')
+					
+					# delete user friends
+					UserFriend.objects.delete(user_id=id)
+					for key, value in enumerate(names):
+						user_friend = UserFriend.objects.save(user, names[key], ages[key])
+
 				if request.FILES.get('profile_img'):
+
+					old_file = Document.objects.get_document(user_id=id)
 
 					if old_file:
 						delete_file = settings.BASE_DIR+old_file.document

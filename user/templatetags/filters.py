@@ -13,4 +13,10 @@ register = template.Library()
 
 @register.filter(name='get_user_type')
 def get_user_type(id):
-	return User.objects.get(id=id, is_active=True).is_staff
+
+	staff_type = User.objects.get(id=id, is_active=True).is_staff
+	
+	if staff_type == 1:
+		return 'Yes'
+	else:
+		return 'No'

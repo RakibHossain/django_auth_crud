@@ -110,7 +110,7 @@ CORE_MIDDLEWARES = [
 # Custom Middleware
 CUSTOM_MIDDLEWARES = [
     'app.middleware.ip_middleware.IPAccess',
-    # 'app.middleware.route_middleware.RouteAccess',
+    'app.middleware.route_middleware.RouteAccess',
 ]
 
 # Middleware Defination

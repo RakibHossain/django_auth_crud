@@ -54,8 +54,8 @@
                       <td>{{ user.first_name }}</td>
                       <td>{{ user.last_name }}</td>
                       <td>{{ user.email }}</td>
-                      {% if user.document.document %}
-                        <td><img src="{{ user.document.document }}" width="50" height="50"></td>
+                      {% if user.profile_image.document %}
+                        <td><img src="{{ user.profile_image.document }}" width="50" height="50"></td>
                       {% else %}
                         <td></td>
                       {% endif %}
