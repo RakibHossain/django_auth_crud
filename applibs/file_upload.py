@@ -30,7 +30,7 @@ class FileUpload():
 			tempname = str(time.time_ns())+'.png'
 
 			# ------------ image resize ------------
-			size = 300, 300
+			size = 420, 420
 			image_file = BytesIO(image_file.file.read())
 			image = Image.open(image_file)
 			image.thumbnail(size, Image.ANTIALIAS)
@@ -46,4 +46,3 @@ class FileUpload():
 			return uploaded_file_url
 		except IOError:
 			logger.exception("Error during resize image")
-		

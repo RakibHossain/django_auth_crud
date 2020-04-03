@@ -12,6 +12,7 @@ from qr_code.qrcode.utils import WifiConfig, QRCodeOptions
 
 from user.models import User, UserFriend, Document
 from .forms import NameForm, DocumentForm
+from applibs.dump import dd
 from applibs.file_upload import FileUpload
 
 
@@ -85,6 +86,10 @@ class ViewUser(View):
 		data = {}
 		data['page_title'] = 'users'
 		data['users'] = User.objects.all_user()
+
+		# dump_data = dd(request, data['users'])
+		# return HttpResponse(dump_data)
+
 		# data['qr_code_message'] = 'Hello World! I am Rakib.'
 		# Use a WifiConfig instance to encapsulate the configuration of the connexion. 
 		data['wifi_config'] = WifiConfig(
