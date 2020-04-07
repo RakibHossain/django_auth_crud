@@ -26,7 +26,11 @@ def dd(request, data=''):
 		files['content_type'] = request.FILES[key].content_type
 		files['size'] = request.FILES[key].size
 
-	query_data = serializers.serialize('json', data)
+	query_data     = ''
+	executed_query = ''
+	if data:
+		executed_query = data.query
+		query_data = serializers.serialize('json', data)
 
 	msg = f'''
 		<html>
@@ -42,7 +46,8 @@ def dd(request, data=''):
 			<span style="color: red;"><b>Get Data</b></span>      : <span style="color: blue;">{get_data}</span><br>
 			<span style="color: red;"><b>Post Data</b></span>     : <span style="color: blue;">{post_data}</span><br>
 			<span style="color: red;"><b>Files</b></span>         : <span style="color: blue;">{files}</span><br>
-			<span style="color: red;"><b>Query Data</b></span>    : <span style="color: blue;">{query_data}</span><br>
+			<span style="color: red;"><b>Executed Query</b></span>: <span style="color: blue;"><br>{executed_query}</span><br>
+			<span style="color: red;"><b>Query Data</b></span>    : <span style="color: blue;"><br>{query_data}</span><br>
 		</html>
 	'''
 
